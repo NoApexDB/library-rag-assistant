@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from build_index import detect_format, parse_fb2
 
-TEST_BOOK = Path(__file__).resolve().parent.parent / "test_book.fb2"
+TEST_BOOK = Path(__file__).resolve().parent / "test_book.fb2"
 
 
 def test_detect_format_recognizes_fb2():

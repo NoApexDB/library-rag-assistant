@@ -1,5 +1,9 @@
 # 🧠 Library RAG Assistant (Intelligent Retrieval-Augmented Generation)
 
+![Tests](https://github.com/chernov-ramil-machinelearning/library-rag-assistant/actions/workflows/tests.yml/badge.svg)
+![Python](https://img.shields.io/badge/python-3.12-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+
 RAG-пайплайн для обработки больших объемов книг/медиа файлов, он включает в себя индексирование выбранных пользователем библиотек, обработку за счёт Ollama-модели Qwen2.5:1.5B (можно настраивать под себя, рекомендовано использовать легковесные модели, ибо они нормально проявляют себя в таких легких задачах) и составление наиболее подходящих по запросу ответов в виде списка
 
 ---

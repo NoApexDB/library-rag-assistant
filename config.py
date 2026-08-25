@@ -8,8 +8,8 @@ load_dotenv()
 
 @dataclass
 class RAGConfig:
-    index_path: Path = Path(os.environ["LIBRARY_INDEX_PATH"])
-    library_root: Path = Path(os.environ["LIBRARY_ROOT"])
+    index_path: Path = Path(os.getenv("LIBRARY_INDEX_PATH", "books_full_index.pkl"))
+    library_root: Path = Path(os.getenv("LIBRARY_ROOT", "."))
 
     # 1. Модели эмбеддинга
     embedding_model_name: str = "cointegrated/rubert-tiny2"
