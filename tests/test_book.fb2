@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0">
+  <description>
+    <title-info>
+      <genre>sf_fantasy</genre>
+      <author>
+        <first-name>Анджей</first-name>
+        <last-name>Сапковский</last-name>
+      </author>
+      <book-title>Последнее желание</book-title>
+      <annotation>
+        <p>Сборник рассказов о ведьмаке Геральте.</p>
+      </annotation>
+    </title-info>
+  </description>
+  <body>
+    <section>
+      <p>Тестовый текст книги для проверки парсера.</p>
+    </section>
+  </body>
+</FictionBook>
