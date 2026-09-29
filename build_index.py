@@ -10,6 +10,7 @@ import pickle
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from pypdf import PdfReader
 from sentence_transformers import SentenceTransformer
 
 from config import config
@@ -33,17 +34,63 @@ def parse_fb2(path: Path) -> dict:
         first_name = first_name_el.text if first_name_el is not None else ""
         final_author = f"{first_name} {last_name}".strip()
 
-    return {"title": title, "author": final_author}
+    annotation_element = root.find('.//fb2:annotation', FB2_NS)
+    annotation = ""
+    if annotation_element is not None:
+        annotation = " ".join("".join(annotation_element.itertext()).split())
+
+    return {"title": title, "author": final_author, "annotation": annotation}
 
 
-# Другие форматы — добавляешь по мере необходимости, не все сразу:
-# def parse_epub(path: Path) -> dict: ...
-# def parse_pdf(path: Path) -> dict: ...
+def parse_pdf(path: Path) -> dict:
+    """Извлекает метаданные и краткий текст (аннотацию/первые страницы) из PDF."""
+    try:
+        reader = PdfReader(str(path))
+    except Exception:
+        return {
+            "title": path.stem.replace("_", " ").strip() or "Без названия",
+            "author": "",
+            "annotation": "",
+        }
 
+    meta = getattr(reader, "metadata", None)
+    title = (getattr(meta, "title", None) or "").strip()
+    if not title:
+        title = path.stem.replace("_", " ").strip() or "Без названия"
+
+    author = (getattr(meta, "author", None) or "").strip()
+
+    annotation_parts = []
+    subject = (getattr(meta, "subject", None) or "").strip()
+    if subject:
+        annotation_parts.append(subject)
+
+    if not getattr(reader, "is_encrypted", False):
+        try:
+            for page in reader.pages[:2]:
+                text = page.extract_text() or ""
+                cleaned = " ".join(text.split())
+                if cleaned:
+                    annotation_parts.append(cleaned)
+        except Exception:
+            pass
+
+    full_annotation = " ".join(annotation_parts).strip()
+    if len(full_annotation) > 1000:
+        full_annotation = full_annotation[:1000].rsplit(" ", 1)[0]
+
+    return {
+        "title": title,
+        "author": author,
+        "annotation": full_annotation,
+    }
+
+
+# Форматы для индексации
 PARSERS = {
     ".fb2": parse_fb2,
+    ".pdf": parse_pdf,
     # ".epub": parse_epub,
-    # ".pdf": parse_pdf,
 }
 
 
